@@ -1,5 +1,5 @@
 # binary-dominoes
-## online multiplayer Dominoes with extra geekery
+### online multiplayer Dominoes with extra geekery
 
 ```
 ├─ client
