@@ -5,6 +5,8 @@ use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
+use web_sys::console;
+
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
@@ -55,6 +57,8 @@ impl Game {
             .map_err(|_| ())
             .unwrap();
 
+        // canvas.
+
         let context = canvas
             .get_context("2d")
             .unwrap()
@@ -71,6 +75,10 @@ impl Game {
         let closure = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
             *mouse_x_copy.borrow_mut() = event.offset_x().to_owned();
             *mouse_y_copy.borrow_mut() = event.offset_y().to_owned();
+
+            unsafe {
+                console::log_1(&"Hello using web-sys".into());
+            };
         }) as Box<dyn FnMut(_)>);
 
         canvas
@@ -93,7 +101,7 @@ impl Game {
 
     pub fn render(&self) -> () {
         for domino in self.dominoes.as_slice() {
-            self.ctx.rect(10.0, 10.0, 10.0, 10.0);
+            self.ctx.rect(*self.mouse_x.borrow() as f64, *self.mouse_y.borrow() as f64, 10.0, 10.0);
             self.ctx.stroke();
         }
     }
